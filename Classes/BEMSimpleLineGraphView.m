@@ -250,14 +250,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
     if ([self.dataSource respondsToSelector:@selector(numberOfPointsInLineGraph:)]) {
         numberOfPoints = [self.dataSource numberOfPointsInLineGraph:self];
         
-    } else if ([self.delegate respondsToSelector:@selector(numberOfPointsInGraph)]) {
-        [self printDeprecationWarningForOldMethod:@"numberOfPointsInGraph" andReplacementMethod:@"numberOfPointsInLineGraph:"];
-        
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        numberOfPoints = [self.delegate numberOfPointsInGraph];
-#pragma clang diagnostic pop
-        
     } else if ([self.delegate respondsToSelector:@selector(numberOfPointsInLineGraph:)]) {
         [self printDeprecationAndUnavailableWarningForOldMethod:@"numberOfPointsInLineGraph:"];
         numberOfPoints = 0;
@@ -484,20 +476,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
             if ([self.dataSource respondsToSelector:@selector(lineGraph:valueForPointAtIndex:)]) {
                 dotValue = [self.dataSource lineGraph:self valueForPointAtIndex:i];
                 
-            } else if ([self.delegate respondsToSelector:@selector(valueForIndex:)]) {
-                [self printDeprecationWarningForOldMethod:@"valueForIndex:" andReplacementMethod:@"lineGraph:valueForPointAtIndex:"];
-                
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                dotValue = [self.delegate valueForIndex:i];
-#pragma clang diagnostic pop
-                
-            } else if ([self.delegate respondsToSelector:@selector(lineGraph:valueForPointAtIndex:)]) {
-                [self printDeprecationAndUnavailableWarningForOldMethod:@"lineGraph:valueForPointAtIndex:"];
-                NSException *exception = [NSException exceptionWithName:@"Implementing Unavailable Delegate Method" reason:@"lineGraph:valueForPointAtIndex: is no longer available on the delegate. It must be implemented on the data source." userInfo:nil];
-                [exception raise];
-                
-                
             } else [NSException raise:@"lineGraph:valueForPointAtIndex: protocol method is not implemented in the data source. Throwing exception here before the system throws a CALayerInvalidGeometry Exception." format:@"Value for point %f at index %lu is invalid. CALayer position may contain NaN: [0 nan]", dotValue, (unsigned long)i];
 #else
             dotValue = (int)(arc4random() % 10000);
@@ -699,14 +677,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         if ([self.delegate respondsToSelector:@selector(numberOfGapsBetweenLabelsOnLineGraph:)]) {
             numberOfGaps = [self.delegate numberOfGapsBetweenLabelsOnLineGraph:self] + 1;
             
-        } else if ([self.delegate respondsToSelector:@selector(numberOfGapsBetweenLabels)]) {
-            [self printDeprecationWarningForOldMethod:@"numberOfGapsBetweenLabels" andReplacementMethod:@"numberOfGapsBetweenLabelsOnLineGraph:"];
-            
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            numberOfGaps = [self.delegate numberOfGapsBetweenLabels] + 1;
-#pragma clang diagnostic pop
-            
         } else {
             numberOfGaps = 1;
         }
@@ -807,20 +777,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
     
     if ([self.dataSource respondsToSelector:@selector(lineGraph:labelOnXAxisForIndex:)]) {
         xAxisLabelText = [self.dataSource lineGraph:self labelOnXAxisForIndex:index];
-        
-    } else if ([self.delegate respondsToSelector:@selector(labelOnXAxisForIndex:)]) {
-        [self printDeprecationWarningForOldMethod:@"labelOnXAxisForIndex:" andReplacementMethod:@"lineGraph:labelOnXAxisForIndex:"];
-        
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        xAxisLabelText = [self.delegate labelOnXAxisForIndex:index];
-#pragma clang diagnostic pop
-        
-    } else if ([self.delegate respondsToSelector:@selector(lineGraph:labelOnXAxisForIndex:)]) {
-        [self printDeprecationAndUnavailableWarningForOldMethod:@"lineGraph:labelOnXAxisForIndex:"];
-        NSException *exception = [NSException exceptionWithName:@"Implementing Unavailable Delegate Method" reason:@"lineGraph:labelOnXAxisForIndex: is no longer available on the delegate. It must be implemented on the data source." userInfo:nil];
-        [exception raise];
-        
     } else  {
         xAxisLabelText = @"";
     }
@@ -1330,13 +1286,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         if ([self.delegate respondsToSelector:@selector(lineGraph:didTouchGraphWithClosestIndex:)] && self.enableTouchReport == YES) {
             [self.delegate lineGraph:self didTouchGraphWithClosestIndex:((NSInteger)closestDot.tag - DotFirstTag100)];
             
-        } else if ([self.delegate respondsToSelector:@selector(didTouchGraphWithClosestIndex:)] && self.enableTouchReport == YES) {
-            [self printDeprecationWarningForOldMethod:@"didTouchGraphWithClosestIndex:" andReplacementMethod:@"lineGraph:didTouchGraphWithClosestIndex:"];
-            
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [self.delegate didTouchGraphWithClosestIndex:((int)closestDot.tag - DotFirstTag100)];
-#pragma clang diagnostic pop
         }
     }
     
@@ -1345,13 +1294,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         if ([self.delegate respondsToSelector:@selector(lineGraph:didReleaseTouchFromGraphWithClosestIndex:)]) {
             [self.delegate lineGraph:self didReleaseTouchFromGraphWithClosestIndex:(closestDot.tag - DotFirstTag100)];
             
-        } else if ([self.delegate respondsToSelector:@selector(didReleaseGraphWithClosestIndex:)]) {
-            [self printDeprecationWarningForOldMethod:@"didReleaseGraphWithClosestIndex:" andReplacementMethod:@"lineGraph:didReleaseTouchFromGraphWithClosestIndex:"];
-            
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [self.delegate didReleaseGraphWithClosestIndex:(closestDot.tag - DotFirstTag100)];
-#pragma clang diagnostic pop
         }
         
         [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
@@ -1469,14 +1411,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
                 if ([self.dataSource respondsToSelector:@selector(lineGraph:valueForPointAtIndex:)]) {
                     dotValue = [self.dataSource lineGraph:self valueForPointAtIndex:i];
                     
-                } else if ([self.delegate respondsToSelector:@selector(valueForIndex:)]) {
-                    [self printDeprecationWarningForOldMethod:@"valueForIndex:" andReplacementMethod:@"lineGraph:valueForPointAtIndex:"];
-                    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                    dotValue = [self.delegate valueForIndex:i];
-#pragma clang diagnostic pop
-                    
                 } else if ([self.delegate respondsToSelector:@selector(lineGraph:valueForPointAtIndex:)]) {
                     [self printDeprecationAndUnavailableWarningForOldMethod:@"lineGraph:valueForPointAtIndex:"];
                     NSException *exception = [NSException exceptionWithName:@"Implementing Unavailable Delegate Method" reason:@"lineGraph:valueForPointAtIndex: is no longer available on the delegate. It must be implemented on the data source." userInfo:nil];
@@ -1509,14 +1443,6 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
             for (int i = 0; i < numberOfPoints; i++) {
                 if ([self.dataSource respondsToSelector:@selector(lineGraph:valueForPointAtIndex:)]) {
                     dotValue = [self.dataSource lineGraph:self valueForPointAtIndex:i];
-                    
-                } else if ([self.delegate respondsToSelector:@selector(valueForIndex:)]) {
-                    [self printDeprecationWarningForOldMethod:@"valueForIndex:" andReplacementMethod:@"lineGraph:valueForPointAtIndex:"];
-                    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-                    dotValue = [self.delegate valueForIndex:i];
-#pragma clang diagnostic pop
                     
                 } else if ([self.delegate respondsToSelector:@selector(lineGraph:valueForPointAtIndex:)]) {
                     [self printDeprecationAndUnavailableWarningForOldMethod:@"lineGraph:valueForPointAtIndex:"];
@@ -1552,7 +1478,7 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
         padding = [self.delegate staticPaddingForLineGraph:self];
 
     if (self.enableXAxisLabel) {
-        if ([self.dataSource respondsToSelector:@selector(lineGraph:labelOnXAxisForIndex:)] || [self.dataSource respondsToSelector:@selector(labelOnXAxisForIndex:)]) {
+        if ([self.dataSource respondsToSelector:@selector(lineGraph:labelOnXAxisForIndex:)]) {
             if ([xAxisLabels count] > 0) {
                 UILabel *label = [xAxisLabels objectAtIndex:0];
                 self.XAxisLabelYOffset = label.frame.size.height + self.widthLine;
