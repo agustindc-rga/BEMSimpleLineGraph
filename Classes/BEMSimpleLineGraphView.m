@@ -1042,20 +1042,31 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
     permanentPopUpLabel.textAlignment = NSTextAlignmentCenter;
     permanentPopUpLabel.numberOfLines = 0;
     
-    NSString *prefix = @"";
-    NSString *suffix = @"";
-    
-    if ([self.delegate respondsToSelector:@selector(popUpSuffixForlineGraph:)])
-        suffix = [self.delegate popUpSuffixForlineGraph:self];
-
-    if ([self.delegate respondsToSelector:@selector(popUpPrefixForlineGraph:)])
-        prefix = [self.delegate popUpPrefixForlineGraph:self];
-
     int index = (int)(circleDot.tag - DotFirstTag100);
-    NSNumber *value = dataPoints[index]; // @((NSInteger) circleDot.absoluteValue)
-    NSString *formattedValue = [NSString stringWithFormat:self.formatStringForValues, value.doubleValue];
-    permanentPopUpLabel.text = [NSString stringWithFormat:@"%@%@%@", prefix, formattedValue, suffix];
     
+    NSString *text = nil;
+    
+    if ([self.delegate respondsToSelector:@selector(lineGraph:textForPopUpAtIndex:)]) {
+        text = [self.delegate lineGraph:self textForPopUpAtIndex:index];
+    }
+    
+    if (text.length == 0) {
+        NSString *prefix = @"";
+        NSString *suffix = @"";
+        
+        if ([self.delegate respondsToSelector:@selector(popUpSuffixForlineGraph:)])
+            suffix = [self.delegate popUpSuffixForlineGraph:self];
+        
+        if ([self.delegate respondsToSelector:@selector(popUpPrefixForlineGraph:)])
+            prefix = [self.delegate popUpPrefixForlineGraph:self];
+        
+        NSNumber *value = dataPoints[index]; // @((NSInteger) circleDot.absoluteValue)
+        NSString *formattedValue = [NSString stringWithFormat:self.formatStringForValues, value.doubleValue];
+        text = [NSString stringWithFormat:@"%@%@%@", prefix, formattedValue, suffix];
+    }
+    
+    permanentPopUpLabel.text = text;
+        
     permanentPopUpLabel.font = self.labelFont;
     permanentPopUpLabel.backgroundColor = [UIColor clearColor];
     [permanentPopUpLabel sizeToFit];
