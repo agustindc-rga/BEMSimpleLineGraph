@@ -765,10 +765,11 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
             else [overlapLabels addObject:label]; // Overlapped
         }
         
-        BOOL fullyContainsLabel = CGRectContainsRect(self.bounds, label.frame);
-        if (!fullyContainsLabel) {
-            [overlapLabels addObject:label];
-        }
+        // This seems to be triggering false positives. Disabled for now.
+//        BOOL fullyContainsLabel = CGRectContainsRect(self.bounds, label.frame);
+//        if (!fullyContainsLabel) {
+//            [overlapLabels addObject:label];
+//        }
     }];
     
     for (UILabel *l in overlapLabels) {
