@@ -730,6 +730,10 @@ typedef NS_ENUM(NSInteger, BEMInternalTags)
                     NSInteger index = i *numberOfGaps - 1 - offset;
                     NSString *xAxisLabelText = [self xAxisTextForIndex:index];
                     
+                    if (xAxisLabelText.length == 0) {
+                        continue;
+                    }
+                    
                     UILabel *labelXAxis = [self xAxisLabelWithText:xAxisLabelText atIndex:index];
                     [xAxisLabels addObject:labelXAxis];
                     
